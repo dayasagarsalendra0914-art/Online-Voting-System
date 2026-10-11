@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Results | Online Voting System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f5fb;
+            color: #1e293b;
+        }
+
+        header {
+            background: linear-gradient(135deg, #102a56, #205ec9);
+            color: white;
+            text-align: center;
+            padding: 35px 15px;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+        }
+
+        header p {
+            margin: 0;
+            color: #e0eaff;
+        }
+
+        main {
+            max-width: 950px;
+            margin: 35px auto;
+            padding: 0 18px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .intro h2 {
+            color: #17396e;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit, minmax(230px, 1fr)
+            );
+            gap: 20px;
+        }
+
+        .candidate {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 5px 18px #1725540d;
+        }
+
+        .candidate h3 {
+            margin-top: 0;
+            color: #17396e;
+        }
+
+        .party {
+            color: #64748b;
+        }
+
+        .votes {
+            margin-top: 22px;
+            padding: 18px;
+            border-radius: 10px;
+            background: #edf3ff;
+        }
+
+        .votes span {
+            display: block;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .votes strong {
+            color: #205ec9;
+            font-size: 32px;
+        }
+
+        .back-link {
+            display: block;
+            width: fit-content;
+            margin: 30px auto;
+            padding: 13px 22px;
+            border-radius: 8px;
+            background: #205ec9;
+            color: white;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            background: #17499f;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Election Results</h1>
+    <p>Online Voting System</p>
+</header>
+
+<main>
+    <section class="intro">
+        <h2>Candidate Vote Counts</h2>
+        <p>View the votes currently recorded in the database.</p>
+    </section>
+
+    <div class="results-grid">
+        <section class="candidate"
+                 th:each="candidate : ${candidates}">
+
+            <h3 th:text="${candidate.name}">
+                Candidate Name
+            </h3>
+
+            <p class="party">
+                Party:
+                <span th:text="${candidate.party}">
+                    Party Name
+                </span>
+            </p>
+
+            <div class="votes">
+                <span>Total votes received</span>
+                <strong th:text="${candidate.votes}">0</strong>
+            </div>
+
+        </section>
+    </div>
+
+    <a class="back-link" th:href="@{/}">
+        Back to Voting Page
+    </a>
+</main>
+
+<footer>
+    Online Voting System | College Project
+</footer>
+
+</body>
+</html>

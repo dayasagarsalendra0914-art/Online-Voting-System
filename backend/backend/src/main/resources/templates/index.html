@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Online Voting System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f2f5fb;
+            margin: 0;
+            color: #1e293b;
+        }
+
+        header {
+            background: linear-gradient(135deg, #102a56, #205ec9);
+            color: white;
+            padding: 32px 20px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+            font-size: 30px;
+        }
+
+        header p {
+            margin: 0;
+            color: #e0eaff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .section-heading h2 {
+            color: #17396e;
+            margin-bottom: 8px;
+        }
+
+        .section-heading p {
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .message {
+            padding: 15px 18px;
+            background: #e7efff;
+            color: #17396e;
+            border: 1px solid #bfd3ff;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow-wrap: anywhere;
+        }
+
+        .candidate-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit, minmax(260px, 1fr)
+            );
+            gap: 22px;
+        }
+
+        .candidate {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 5px 18px #1725540d;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .candidate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px #17255416;
+        }
+
+        .candidate-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            background: #e8efff;
+            color: #205ec9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            margin-bottom: 18px;
+        }
+
+        .candidate h3 {
+            color: #17396e;
+            margin: 0 0 15px;
+            font-size: 21px;
+        }
+
+        .party {
+            color: #64748b;
+            margin-bottom: 18px;
+        }
+
+        .vote-count {
+            background: #f5f8ff;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 20px;
+        }
+
+        .vote-count span {
+            display: block;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .vote-count strong {
+            font-size: 25px;
+            color: #205ec9;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #205ec9;
+            box-shadow: 0 0 0 3px #205ec922;
+        }
+
+        button {
+            width: 100%;
+            background: #205ec9;
+            color: white;
+            border: none;
+            padding: 13px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #17499f;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 15px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 25px 15px;
+            }
+
+            header h1 {
+                font-size: 25px;
+            }
+
+            .container {
+                margin-top: 22px;
+                padding: 0 14px;
+            }
+
+            .candidate {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo" aria-hidden="true">&#9745;</div>
+    <h1>Online Voting System</h1>
+    <p>A simple and convenient digital voting platform</p>
+</header>
+
+<main class="container">
+
+    <div class="section-heading">
+        <h2>Candidate List</h2>
+        <p>Review the candidates and select one to cast your vote.</p>
+    </div>
+
+    <div class="message"
+         role="status"
+         aria-live="polite"
+         th:if="${message}"
+         th:text="${message}">
+    </div>
+
+    <div class="candidate-grid">
+
+        <section class="candidate"
+                 th:each="candidate : ${candidates}">
+
+            <div class="candidate-icon" aria-hidden="true">
+                &#128100;
+            </div>
+
+            <h3 th:text="${candidate.name}">Candidate Name</h3>
+
+            <p class="party">
+                Party:
+                <strong th:text="${candidate.party}">Party Name</strong>
+            </p>
+
+            <div class="vote-count">
+                <span>Current vote count</span>
+                <strong th:text="${candidate.votes}">0</strong>
+            </div>
+
+            <form th:action="@{/vote}" method="post">
+
+                <label th:for="${'voter-' + candidate.id}">
+                    Registered Voter ID
+                </label>
+
+                <input type="text"
+                       th:id="${'voter-' + candidate.id}"
+                       name="voterId"
+                       maxlength="9"
+                       pattern="[Vv][Oo][Tt][Ee][Rr][0-9]{3}"
+                       title="Enter an ID such as VOTER001"
+                       required
+                       autocomplete="off"
+                       placeholder="Example: VOTER001">
+
+                <input type="hidden"
+                       name="candidateId"
+                       th:value="${candidate.id}">
+
+                <button type="submit">
+                    Submit Vote
+                </button>
+
+            </form>
+        </section>
+
+    </div>
+</main>
+
+<footer>
+    Online Voting System | College Project
+</footer>
+
+</body>
+</html>
